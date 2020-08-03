@@ -1,14 +1,16 @@
 ## tests-runner
 
-Simple tests runner
+Cистема проверки на основе тестовых файлов
 
-## Install
+## Установка
+
+*Для установки зависимостей необходима среда [nodejs](https://nodejs.org/en/)*
 
 ```bash
 $ npm install
 ```
 
-## Usage
+## Использование
 
 ```js
 // problem.js
