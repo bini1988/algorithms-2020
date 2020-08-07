@@ -2,9 +2,13 @@ const format = require("./format");
 
 /**
  * Итеративный способ возведения в степень
+ * Сложность: O(n)
  */
 function pow(a, n) {
-  for(var r = 1; n; n--) { r *= a; }
+  let r = 1;
+
+  while(n--) { r *= a; }
+
   return r;
 }
 
