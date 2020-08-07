@@ -7,9 +7,9 @@ const format = require("./format");
 function pow(a, n) {
   let r = 1;
 
-  while (n) {
-    r = (n % 2) ? r * a : r;
-    n = (n - n % 2) / 2;
+  while (n > 0) {
+    r = (n % 2n) ? r * a : r;
+    n = n >> 1n;
     a *= a;
   }
   return r;
@@ -17,7 +17,7 @@ function pow(a, n) {
 
 module.exports = function ([line1, line2]) {
   const A = parseFloat(line1);
-  const N = parseFloat(line2);
+  const N = BigInt(line2);
 
   return format(pow(A, N));
 };
