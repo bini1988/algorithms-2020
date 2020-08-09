@@ -24,5 +24,5 @@ module.exports = function ([line1, line2]) {
   const A = BigInt(line1);
   const B = BigInt(line2);
 
-  return gcd2(A, B);
+  return gcd(A, B);
 };
