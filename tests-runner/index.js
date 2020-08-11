@@ -102,7 +102,9 @@ async function run(index, problems, [inputPath, outputPath]) {
         const output = problem(inputLines, index);
 
         const hrtime = process.hrtime(hrstart);
-        const actual = trim(output);
+        const actualData = Array.isArray(output)
+          ? output.join("\r\n") : output;
+        const actual = trim(actualData);
         const expect = trim(outputData);
         const test = (actual === expect);
 
