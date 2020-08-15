@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const NativeArray_1 = require("../NativeArray");
+const create_test_1 = require("./create-test");
+const test = create_test_1.createTest(NativeArray_1.NativeArray);
+test.title = "NativeArray";
+module.exports = test;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvYmxlbS0wMS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInByb2JsZW0tMDEudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxnREFBNkM7QUFDN0MsK0NBQTJDO0FBRTNDLE1BQU0sSUFBSSxHQUFHLHdCQUFVLENBQUMseUJBQVcsQ0FBQyxDQUFDO0FBQ3JDLElBQUksQ0FBQyxLQUFLLEdBQUcsYUFBYSxDQUFDO0FBRTNCLE1BQU0sQ0FBQyxPQUFPLEdBQUcsSUFBSSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTmF0aXZlQXJyYXkgfSBmcm9tIFwiLi4vTmF0aXZlQXJyYXlcIjtcbmltcG9ydCB7IGNyZWF0ZVRlc3QgfSBmcm9tIFwiLi9jcmVhdGUtdGVzdFwiO1xuXG5jb25zdCB0ZXN0ID0gY3JlYXRlVGVzdChOYXRpdmVBcnJheSk7XG50ZXN0LnRpdGxlID0gXCJOYXRpdmVBcnJheVwiO1xuXG5tb2R1bGUuZXhwb3J0cyA9IHRlc3Q7XG4iXX0=

@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const SingleArray_1 = require("../SingleArray");
+const create_test_1 = require("./create-test");
+const test = create_test_1.createTest(SingleArray_1.SingleArray);
+test.title = "SingleArray";
+module.exports = test;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvYmxlbS0wMi5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInByb2JsZW0tMDIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxnREFBNkM7QUFDN0MsK0NBQTJDO0FBRTNDLE1BQU0sSUFBSSxHQUFHLHdCQUFVLENBQUMseUJBQVcsQ0FBQyxDQUFDO0FBQ3JDLElBQUksQ0FBQyxLQUFLLEdBQUcsYUFBYSxDQUFDO0FBRTNCLE1BQU0sQ0FBQyxPQUFPLEdBQUcsSUFBSSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgU2luZ2xlQXJyYXkgfSBmcm9tIFwiLi4vU2luZ2xlQXJyYXlcIjtcbmltcG9ydCB7IGNyZWF0ZVRlc3QgfSBmcm9tIFwiLi9jcmVhdGUtdGVzdFwiO1xuXG5jb25zdCB0ZXN0ID0gY3JlYXRlVGVzdChTaW5nbGVBcnJheSk7XG50ZXN0LnRpdGxlID0gXCJTaW5nbGVBcnJheVwiO1xuXG5tb2R1bGUuZXhwb3J0cyA9IHRlc3Q7XG4iXX0=

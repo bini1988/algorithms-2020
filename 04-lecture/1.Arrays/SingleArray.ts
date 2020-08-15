@@ -1,9 +1,13 @@
 
-class SingleArray<T> {
+export class SingleArray<T> {
   private arr: T[] = new Array<T>(0);
 
   public get size() {
     return this.arr.length;
+  }
+
+  public get isEmpty() {
+    return this.size === 0;
   }
 
   public add(item: T, index = this.size): void {
@@ -39,14 +43,8 @@ class SingleArray<T> {
 
     return item;
   }
-}
 
-module.exports = function ([line]: string[]) {
-  const SIZE = parseInt(line, 10);
-  const arr = new SingleArray<number>();
-
-  for(let i = 0; i < SIZE; i++) {
-    arr.add(i, i);
+  public toString() {
+    return this.arr.slice(0, this.size).join(",");
   }
-  return null;
-};
+}
