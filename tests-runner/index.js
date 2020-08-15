@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { stat, readdir, readFile } = require("fs").promises;
+const { stat, access, readdir, readFile } = require("fs").promises;
 const Table = require("cli-table");
 require("colors");
 
@@ -8,14 +8,26 @@ function trim(value) {
   return `${value}`.trim();
 }
 
-function print(str = "") {
-  return (str.length > 15)
-    ? `${str.slice(0, 9)}...${str.slice(-3)}` : str;
+function print(str = "", maxLength = 15) {
+  const endIndex = Math.trunc((maxLength - 3) * 0.5);
+  return (str.length > maxLength)
+    ? `${str.slice(0, endIndex)}...${str.slice(-endIndex)}` : str;
 }
 
 function printTime([seconds, nanoseconds] = []) {
   const msseconds = seconds * 10e3 + nanoseconds * 1e-6;
   return `${msseconds.toFixed(seconds > 0 ? 2 : 4)}ms`;
+}
+
+function printProblemsHead(problems) {
+  return problems.map((problem, index) => problem.title || `Problem #${index + 1}`);
+}
+
+function createReportTable(problems) {
+  const head = ["#", "Input", ...printProblemsHead(problems)];
+  const colWidths = [4, 10, ...problems.map(() => 20)];
+
+  return new Table({ head, colWidths });
 }
 
 /**
@@ -33,9 +45,12 @@ async function resolveTests(problemsPath) {
     const input = `test.${index}.in`;
     const output = `test.${index}.out`;
 
-    if (!files.includes(input) || !files.includes(output)) break;
+    if (!files.includes(input)) break;
 
-    tests.push([path.resolve(testsPath, input), path.resolve(testsPath, output)])
+    tests.push([
+      path.resolve(testsPath, input),
+      path.resolve(testsPath, output),
+    ])
   }
   return tests;
 }
@@ -83,6 +98,21 @@ function countdownOf(totalCount) {
   };
 }
 
+async function readInput(inputPath) {
+  const input = await readFile(inputPath, { encoding: "utf-8" });
+  return trim(input).split(/\r?\n/);
+}
+
+async function readOutput(outputPath) {
+  try {
+    await access(outputPath, fs.constants.F_OK | fs.constants.R_OK)
+    const output = await readFile(outputPath, { encoding: "utf-8" });
+    return trim(output);
+  } catch (error) {
+    return null;
+  }
+}
+
 /**
  * Запуск теста
  * @param {number} index
@@ -91,21 +121,19 @@ function countdownOf(totalCount) {
  */
 async function run(index, problems, [inputPath, outputPath]) {
   try {
-    const inputData = await readFile(inputPath, { encoding: "utf-8" });
-    const outputData = await readFile(outputPath, { encoding: "utf-8" });
-    const inputLines = inputData.split(/\r?\n/);
-    const task = { index, problems: [] };
+    const input = await readInput(inputPath);
+    const task = { index, input, problems: [] };
+    const expect = await readOutput(outputPath);
 
     for (const problem of problems) {
       try {
         const hrstart = process.hrtime();
-        const output = problem(inputLines, index);
-
+        const output = problem(input, index);
         const hrtime = process.hrtime(hrstart);
+
         const actualData = Array.isArray(output)
           ? output.join("\r\n") : output;
         const actual = trim(actualData);
-        const expect = trim(outputData);
         const test = (actual === expect);
 
         task.problems.push({ hrtime, actual, expect, test });
@@ -121,7 +149,7 @@ async function run(index, problems, [inputPath, outputPath]) {
 
 (async function () {
   try {
-    const [NODE, SCRIPT_PATH, PROBLEM_PATH] = process.argv;
+    const [NODE, SCRIPT_PATH, PROBLEM_PATH, OPTION_KEY] = process.argv;
     const PROBLEM_FULL_PATH = path.resolve(PROBLEM_PATH);
 
     const problems = await resolveProblems(PROBLEM_FULL_PATH);
@@ -134,25 +162,27 @@ async function run(index, problems, [inputPath, outputPath]) {
     }
 
     const tasks = await Promise.all(runs);
-    const head = ["#", ...problems.map((_, index) => `Problem #${index + 1}`)];
-    const colWidths = [4, ...problems.map(() => 25)];
-    const report = new Table({ head, colWidths });
+    const report = createReportTable(problems);
 
     countdown();
 
-    for (const { index, problems } of tasks) {
-      const columns = [index];
+    for (const { index, error, input, problems } of tasks) {
+      const columns = [index, print(input, 8)];
 
+      if (error) {
+        columns.push(`${"[e] Error".red}\n${print(error.message)}`);
+        continue;
+      }
       for (const { error, test, expect, actual, hrtime } of problems) {
         if (error) {
           columns.push(`${"[e] Error".red}\n${print(error.message)}`);
-        } else if (test) {
+        } else if (test || (expect === null)) {
           columns.push(`${"[x]".green} ${printTime(hrtime)}`);
         } else if (actual === "null") {
           columns.push(`${"[o]".red} ∞ ms`);
         } else {
-          const pExpect = `${"Expect:".green} ${print(expect)}`;
-          const pActual = `${"Actual:".red} ${print(actual)}`;
+          const pExpect = `${"E:".green} ${print(expect)}`;
+          const pActual = `${"A:".red} ${print(actual)}`;
 
           columns.push(`${"[o]".red} ${printTime(hrtime)}\n${pExpect}\n${pActual}`);
         }
