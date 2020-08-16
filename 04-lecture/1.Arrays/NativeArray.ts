@@ -11,6 +11,10 @@ export class NativeArray<T> implements IArray<T> {
     return this.size === 0;
   }
 
+  public from(arr: T[]) {
+    this.arr = arr;
+  }
+
   public add(item: T, index = this.size): void {
     this.arr.splice(index, 0, item);
   }

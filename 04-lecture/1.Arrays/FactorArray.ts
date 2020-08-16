@@ -12,6 +12,11 @@ export class FactorArray<T> {
     return this.size === 0;
   }
 
+  public from(arr: T[]) {
+    this.arr = arr;
+    this.size = arr.length;
+  }
+
   public add(item: T, index = this.size): void {
     let position = Math.min(index, this.size);
     let target = this.arr;

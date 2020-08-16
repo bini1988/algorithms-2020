@@ -3,17 +3,26 @@ import { IArray } from "./IArray";
 export class MatrixArray<T> {
   private box: Array<Array<T>>;
   /** Количество элементов в одном под массиве */
-  private amount: number;
+  public amount: number;
   public size: number;
 
   public constructor() {
     this.size = 0;
-    this.amount = 5;
+    this.amount = 15;
     this.box = [[]];
   }
 
   public get isEmpty() {
     return this.size === 0;
+  }
+
+  public from(arr: T[]) {
+    this.box = [];
+    this.size = arr.length;
+
+    for (let i = 0; i < Math.ceil(this.size / this.amount); i++) {
+      this.box.push(arr.slice(this.amount * i, this.amount * i + this.amount));
+    }
   }
 
   public indexesOf(i: number) {
