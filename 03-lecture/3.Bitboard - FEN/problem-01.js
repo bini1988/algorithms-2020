@@ -1,39 +1,40 @@
 
-function toIndex(piece) {
-  switch (piece) {
+function toIndex(ch) {
+  switch (ch) {
     case "P": return 0;
     case "N": return 1;
     case "B": return 2;
     case "R": return 3;
     case "Q": return 4;
     case "K": return 5;
+    case "p": return 6;
+    case "n": return 7;
+    case "b": return 8;
+    case "r": return 9;
+    case "q": return 10;
+    case "k": return 11;
   }
 }
 
 function fen2bitboard(fen = "") {
-  let whites = [0n, 0n, 0n, 0n, 0n, 0n];
-  let blacks = [0n, 0n, 0n, 0n, 0n, 0n];
+  let pieces = [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n];
   let col = 0;
   let row = 7;
 
   for (let ch of fen) {
-    let key = ch.toUpperCase();
-    let offset = parseInt(ch, 10);
+    let pos = parseInt(ch, 10);
 
-    if (key === "/") {
+    if (Number.isInteger(pos)) {
+      col += pos;
+    } else if (ch === "/") {
       row--;
       col = 0;
-    } else if (Number.isInteger(offset)) {
-      col += offset;
     } else {
-      let pieces = (ch.charCodeAt(0) >= 97) ? blacks : whites;
-      let index = toIndex(key);
-
-      pieces[index] |= (0x01n << BigInt(col + row * 8));
+      pieces[toIndex(ch)] |= (0x01n << BigInt(col + row * 8));
       col++;
     }
   }
-  return [...whites, ...blacks];
+  return pieces;
 }
 
 module.exports = function ([line]) {
