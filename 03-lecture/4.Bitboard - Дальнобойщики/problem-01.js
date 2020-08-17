@@ -55,11 +55,11 @@ function move(mask, dir) {
   }
 }
 
-function movesOf(piece, board, whitesBoard, dirs = []) {
+function movesOf(piece, inverseBoard, whitesBoard, dirs = []) {
   let out = 0x0000_0000_0000_0000n;
 
   for (let dir of dirs) {
-    for (let mask = piece; mask; mask &= board) {
+    for (let mask = piece; mask; mask &= inverseBoard) {
       mask = move(mask, dir);
       out |= mask;
     }
