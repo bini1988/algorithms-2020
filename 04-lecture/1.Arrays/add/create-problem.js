@@ -8,7 +8,7 @@ function createProblem(Collection, title) {
     const arr = new Collection();
 
     for(let i = 0; i < SIZE; i++) {
-      arr.add(i);
+      arr.add(i, 0);
     }
     return null;
   }

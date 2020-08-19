@@ -27,6 +27,7 @@ class FactorArray {
    */
   from(arr) {
     this.arr = arr;
+    this.size = arr.length;
   }
 
   /**
