@@ -14,3 +14,15 @@ $ npm install
 ```bash
 $ node ./tests-runner ./01-lecture/1.Tickets/problem-02.js
 ```
+
+## Запуск `*.test.js` файлов
+
+```bash
+$ npm test
+```
+
+## Сборка `.ts` файлов
+
+```bash
+$ npm run tsc
+```
