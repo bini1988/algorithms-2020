@@ -1,48 +1,97 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FactorArray = void 0;
+
 class FactorArray {
-    constructor() {
-        this.arr = new Array(10);
-        this.size = 0;
+  /**
+   * @param {number} capacity Исходный размер выделямой колекции
+   */
+  constructor(capacity = 10) {
+    /**
+     * @type {Array<any>}
+     */
+    this.arr = new Array(capacity);
+    /**
+     * @type {number}
+     */
+    this.size = 0;
+  }
+
+  /**
+   * Является ли массив пустым
+   */
+  get isEmpty() {
+    return this.size === 0;
+  }
+
+  /**
+   * Инициализировать коллекцию исходным массивом
+   * @param {Array<any>} arr
+   */
+  from(arr) {
+    this.arr = arr;
+  }
+
+  /**
+   * Возвращает элемент по индексу
+   * @param {number} index Индекс элемента
+   */
+  by(index) {
+    return this.arr[index];
+  }
+
+  /**
+   * Добавляет элемент по заданному индексу
+   * @param {any} item Добавляемый элемент
+   * @param {number} index Индекс вставки элемента
+   */
+  add(item, index = this.size) {
+    let pos = Math.min(index, this.size);
+    let src = this.arr;
+
+    if (this.size === this.arr.length) {
+      src = new Array(this.size * 2 + 1);
+
+      for (let i = 0; i < this.size; i++) {
+        src[i] = this.arr[i];
+      }
     }
-    get isEmpty() {
-        return this.size === 0;
+    for (let i = this.size; i > pos; i--) {
+      src[i] = this.arr[i - 1];
     }
-    from(arr) {
-        this.arr = arr;
-        this.size = arr.length;
+    src[pos] = item;
+
+    this.arr = src;
+    this.size++;
+  }
+
+  /**
+   * Удаляет элемент по заданному индексу
+   * @param {number} index Индекс удаляемого элемента
+   */
+  remove(index = -1) {
+    const pos = (index === -1)
+      ? this.size - 1 : Math.min(index, this.size);
+
+    let item = this.arr[pos];
+
+    for (let i = pos; i < this.size - 1; i++) {
+      this.arr[i] = this.arr[i + 1];
     }
-    add(item, index = this.size) {
-        let position = Math.min(index, this.size);
-        let target = this.arr;
-        let i = position;
-        if (this.size === this.arr.length) {
-            target = new Array(this.size * 2 + 1);
-            i = 0;
-            while (i < position) {
-                target[i] = this.arr[i++];
-            }
-        }
-        target[i++] = item;
-        for (; i < this.size + 1; i++) {
-            target[i] = this.arr[i - 1];
-        }
-        this.arr = target;
-        this.size++;
+
+    this.size--;
+    return item;
+  }
+
+  /**
+   * Возваращает копию массива элементов
+   * @returns {any[]}
+   */
+  toArray() {
+    const out = new Array(this.size);
+
+    for (let i = 0; i < this.size; i++) {
+      out[i] = this.arr[i];
     }
-    remove(index) {
-        let position = Math.min(index, this.size);
-        let item = this.arr[index];
-        for (let i = position; i < this.size - 1; i++) {
-            this.arr[i] = this.arr[i + 1];
-        }
-        this.size--;
-        return item;
-    }
-    toString() {
-        return this.arr.slice(0, this.size).join(",");
-    }
+    return out;
+  }
 }
-exports.FactorArray = FactorArray;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiRmFjdG9yQXJyYXkuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJGYWN0b3JBcnJheS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFDQSxNQUFhLFdBQVc7SUFJdEI7UUFDRSxJQUFJLENBQUMsR0FBRyxHQUFHLElBQUksS0FBSyxDQUFJLEVBQUUsQ0FBQyxDQUFDO1FBQzVCLElBQUksQ0FBQyxJQUFJLEdBQUcsQ0FBQyxDQUFDO0lBQ2hCLENBQUM7SUFFRCxJQUFXLE9BQU87UUFDaEIsT0FBTyxJQUFJLENBQUMsSUFBSSxLQUFLLENBQUMsQ0FBQztJQUN6QixDQUFDO0lBRU0sSUFBSSxDQUFDLEdBQVE7UUFDbEIsSUFBSSxDQUFDLEdBQUcsR0FBRyxHQUFHLENBQUM7UUFDZixJQUFJLENBQUMsSUFBSSxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUM7SUFDekIsQ0FBQztJQUVNLEdBQUcsQ0FBQyxJQUFPLEVBQUUsS0FBSyxHQUFHLElBQUksQ0FBQyxJQUFJO1FBQ25DLElBQUksUUFBUSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsS0FBSyxFQUFFLElBQUksQ0FBQyxJQUFJLENBQUMsQ0FBQztRQUMxQyxJQUFJLE1BQU0sR0FBRyxJQUFJLENBQUMsR0FBRyxDQUFDO1FBQ3RCLElBQUksQ0FBQyxHQUFHLFFBQVEsQ0FBQztRQUVqQixJQUFJLElBQUksQ0FBQyxJQUFJLEtBQUssSUFBSSxDQUFDLEdBQUcsQ0FBQyxNQUFNLEVBQUU7WUFDakMsTUFBTSxHQUFHLElBQUksS0FBSyxDQUFJLElBQUksQ0FBQyxJQUFJLEdBQUcsQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFDO1lBQ3pDLENBQUMsR0FBRyxDQUFDLENBQUM7WUFFTixPQUFPLENBQUMsR0FBRyxRQUFRLEVBQUU7Z0JBQ25CLE1BQU0sQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUM7YUFDM0I7U0FDRjtRQUVELE1BQU0sQ0FBQyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQztRQUVuQixPQUFPLENBQUMsR0FBRyxJQUFJLENBQUMsSUFBSSxHQUFHLENBQUMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUM3QixNQUFNLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUE7U0FDNUI7UUFFRCxJQUFJLENBQUMsR0FBRyxHQUFHLE1BQU0sQ0FBQztRQUNsQixJQUFJLENBQUMsSUFBSSxFQUFFLENBQUM7SUFDZCxDQUFDO0lBRU0sTUFBTSxDQUFDLEtBQWE7UUFDekIsSUFBSSxRQUFRLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxLQUFLLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDO1FBQzFDLElBQUksSUFBSSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsS0FBSyxDQUFDLENBQUM7UUFFM0IsS0FBSyxJQUFJLENBQUMsR0FBRyxRQUFRLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQyxJQUFJLEdBQUcsQ0FBQyxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQzdDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUM7U0FDL0I7UUFDRCxJQUFJLENBQUMsSUFBSSxFQUFFLENBQUM7UUFFWixPQUFPLElBQUksQ0FBQztJQUNkLENBQUM7SUFFTSxRQUFRO1FBQ2IsT0FBTyxJQUFJLENBQUMsR0FBRyxDQUFDLEtBQUssQ0FBQyxDQUFDLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQztJQUNoRCxDQUFDO0NBQ0Y7QUF6REQsa0NBeURDIiwic291cmNlc0NvbnRlbnQiOlsiXG5leHBvcnQgY2xhc3MgRmFjdG9yQXJyYXk8VD4ge1xuICBwcml2YXRlIGFycjogVFtdO1xuICBwdWJsaWMgc2l6ZTogbnVtYmVyO1xuXG4gIHB1YmxpYyBjb25zdHJ1Y3RvcigpIHtcbiAgICB0aGlzLmFyciA9IG5ldyBBcnJheTxUPigxMCk7XG4gICAgdGhpcy5zaXplID0gMDtcbiAgfVxuXG4gIHB1YmxpYyBnZXQgaXNFbXB0eSgpIHtcbiAgICByZXR1cm4gdGhpcy5zaXplID09PSAwO1xuICB9XG5cbiAgcHVibGljIGZyb20oYXJyOiBUW10pIHtcbiAgICB0aGlzLmFyciA9IGFycjtcbiAgICB0aGlzLnNpemUgPSBhcnIubGVuZ3RoO1xuICB9XG5cbiAgcHVibGljIGFkZChpdGVtOiBULCBpbmRleCA9IHRoaXMuc2l6ZSk6IHZvaWQge1xuICAgIGxldCBwb3NpdGlvbiA9IE1hdGgubWluKGluZGV4LCB0aGlzLnNpemUpO1xuICAgIGxldCB0YXJnZXQgPSB0aGlzLmFycjtcbiAgICBsZXQgaSA9IHBvc2l0aW9uO1xuXG4gICAgaWYgKHRoaXMuc2l6ZSA9PT0gdGhpcy5hcnIubGVuZ3RoKSB7XG4gICAgICB0YXJnZXQgPSBuZXcgQXJyYXk8VD4odGhpcy5zaXplICogMiArIDEpO1xuICAgICAgaSA9IDA7XG5cbiAgICAgIHdoaWxlIChpIDwgcG9zaXRpb24pIHtcbiAgICAgICAgdGFyZ2V0W2ldID0gdGhpcy5hcnJbaSsrXTtcbiAgICAgIH1cbiAgICB9XG5cbiAgICB0YXJnZXRbaSsrXSA9IGl0ZW07XG5cbiAgICBmb3IgKDsgaSA8IHRoaXMuc2l6ZSArIDE7IGkrKykge1xuICAgICAgdGFyZ2V0W2ldID0gdGhpcy5hcnJbaSAtIDFdXG4gICAgfVxuXG4gICAgdGhpcy5hcnIgPSB0YXJnZXQ7XG4gICAgdGhpcy5zaXplKys7XG4gIH1cblxuICBwdWJsaWMgcmVtb3ZlKGluZGV4OiBudW1iZXIpOiBUIHtcbiAgICBsZXQgcG9zaXRpb24gPSBNYXRoLm1pbihpbmRleCwgdGhpcy5zaXplKTtcbiAgICBsZXQgaXRlbSA9IHRoaXMuYXJyW2luZGV4XTtcblxuICAgIGZvciAobGV0IGkgPSBwb3NpdGlvbjsgaSA8IHRoaXMuc2l6ZSAtIDE7IGkrKykge1xuICAgICAgdGhpcy5hcnJbaV0gPSB0aGlzLmFycltpICsgMV07XG4gICAgfVxuICAgIHRoaXMuc2l6ZS0tO1xuXG4gICAgcmV0dXJuIGl0ZW07XG4gIH1cblxuICBwdWJsaWMgdG9TdHJpbmcoKSB7XG4gICAgcmV0dXJuIHRoaXMuYXJyLnNsaWNlKDAsIHRoaXMuc2l6ZSkuam9pbihcIixcIik7XG4gIH1cbn1cbiJdfQ==
+
+module.exports = FactorArray;

@@ -1,8 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const FactorArray_1 = require("../FactorArray");
-const create_test_1 = require("./create-test");
-const test = create_test_1.createTest(FactorArray_1.FactorArray);
-test.title = "FactorArray";
-module.exports = test;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvYmxlbS0wNC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInByb2JsZW0tMDQudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxnREFBNkM7QUFDN0MsK0NBQTJDO0FBRTNDLE1BQU0sSUFBSSxHQUFHLHdCQUFVLENBQUMseUJBQVcsQ0FBQyxDQUFDO0FBQ3JDLElBQUksQ0FBQyxLQUFLLEdBQUcsYUFBYSxDQUFDO0FBRTNCLE1BQU0sQ0FBQyxPQUFPLEdBQUcsSUFBSSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgRmFjdG9yQXJyYXkgfSBmcm9tIFwiLi4vRmFjdG9yQXJyYXlcIjtcbmltcG9ydCB7IGNyZWF0ZVRlc3QgfSBmcm9tIFwiLi9jcmVhdGUtdGVzdFwiO1xuXG5jb25zdCB0ZXN0ID0gY3JlYXRlVGVzdChGYWN0b3JBcnJheSk7XG50ZXN0LnRpdGxlID0gXCJGYWN0b3JBcnJheVwiO1xuXG5tb2R1bGUuZXhwb3J0cyA9IHRlc3Q7XG4iXX0=

@@ -1,49 +1,84 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VectorArray = void 0;
+
 class VectorArray {
-    constructor(vector = 10) {
-        this.vector = vector;
-        this.size = 0;
-        this.arr = new Array(this.size);
+  constructor(vector = 10) {
+    this.vector = vector;
+    this.size = 0;
+    /**
+     * @type {Array<any>}
+     */
+    this.arr = new Array(this.size);
+  }
+
+  /**
+   * Является ли массив пустым
+   */
+  get isEmpty() {
+    return this.size === 0;
+  }
+
+  /**
+   * Инициализировать коллекцию исходным массивом
+   * @param {Array<any>} arr
+   */
+  from(arr) {
+    this.arr = arr;
+    this.size = arr.length;
+  }
+
+  /**
+   * Добавляет элемент по заданному индексу
+   * @param {any} item Добавляемый элемент
+   * @param {number} index Индекс вставки элемента
+   */
+  add(item, index = this.size) {
+    const pos = Math.min(index, this.size);
+    let src = this.arr;
+
+    if (this.size === this.arr.length) {
+      src = new Array(this.size + this.vector);
+
+      for (let i = 0; i < this.size; i++) {
+        src[i] = this.arr[i];
+      }
     }
-    get isEmpty() {
-        return this.size === 0;
+    for (let i = this.size; i > pos; i--) {
+      src[i] = this.arr[i - 1];
     }
-    from(arr) {
-        this.arr = arr;
-        this.size = arr.length;
+    src[pos] = item;
+
+    this.arr = src;
+    this.size++;
+  }
+
+  /**
+   * Удаляет элемент по заданному индексу
+   * @param {number} index Индекс удаляемого элемента
+   */
+  remove(index = -1) {
+    const pos = (index === -1)
+      ? this.size - 1 : Math.min(index, this.size);
+
+    const item = this.arr[pos];
+
+    for (let i = pos; i < this.size - 1; i++) {
+      this.arr[i] = this.arr[i + 1];
     }
-    add(item, index = this.size) {
-        let position = Math.min(index, this.size);
-        let target = this.arr;
-        let i = position;
-        if (this.size === this.arr.length) {
-            target = new Array(this.size + this.vector);
-            i = 0;
-            while (i < position) {
-                target[i] = this.arr[i++];
-            }
-        }
-        target[i++] = item;
-        for (; i < this.size + 1; i++) {
-            target[i] = this.arr[i - 1];
-        }
-        this.arr = target;
-        this.size++;
+    this.size--;
+    return item;
+  }
+
+  /**
+   * Возваращает копию массива элементов
+   * @returns {any[]}
+   */
+  toArray() {
+    const out = new Array(this.size);
+
+    for (let i = 0; i < this.size; i++) {
+      out[i] = this.arr[i];
     }
-    remove(index) {
-        let position = Math.min(index, this.size);
-        let item = this.arr[index];
-        for (let i = position; i < this.size - 1; i++) {
-            this.arr[i] = this.arr[i + 1];
-        }
-        this.size--;
-        return item;
-    }
-    toString() {
-        return this.arr.slice(0, this.size).join(",");
-    }
+    return out;
+  }
 }
-exports.VectorArray = VectorArray;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVmVjdG9yQXJyYXkuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJWZWN0b3JBcnJheS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFDQSxNQUFhLFdBQVc7SUFLdEIsWUFBbUIsU0FBaUIsRUFBRTtRQUNwQyxJQUFJLENBQUMsTUFBTSxHQUFHLE1BQU0sQ0FBQztRQUNyQixJQUFJLENBQUMsSUFBSSxHQUFHLENBQUMsQ0FBQztRQUNkLElBQUksQ0FBQyxHQUFHLEdBQUcsSUFBSSxLQUFLLENBQUksSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDO0lBQ3JDLENBQUM7SUFFRCxJQUFXLE9BQU87UUFDaEIsT0FBTyxJQUFJLENBQUMsSUFBSSxLQUFLLENBQUMsQ0FBQztJQUN6QixDQUFDO0lBRU0sSUFBSSxDQUFDLEdBQVE7UUFDbEIsSUFBSSxDQUFDLEdBQUcsR0FBRyxHQUFHLENBQUM7UUFDZixJQUFJLENBQUMsSUFBSSxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUM7SUFDekIsQ0FBQztJQUVNLEdBQUcsQ0FBQyxJQUFPLEVBQUUsS0FBSyxHQUFHLElBQUksQ0FBQyxJQUFJO1FBQ25DLElBQUksUUFBUSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsS0FBSyxFQUFFLElBQUksQ0FBQyxJQUFJLENBQUMsQ0FBQztRQUMxQyxJQUFJLE1BQU0sR0FBRyxJQUFJLENBQUMsR0FBRyxDQUFDO1FBQ3RCLElBQUksQ0FBQyxHQUFHLFFBQVEsQ0FBQztRQUVqQixJQUFJLElBQUksQ0FBQyxJQUFJLEtBQUssSUFBSSxDQUFDLEdBQUcsQ0FBQyxNQUFNLEVBQUU7WUFDakMsTUFBTSxHQUFHLElBQUksS0FBSyxDQUFJLElBQUksQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFDLE1BQU0sQ0FBQyxDQUFDO1lBQy9DLENBQUMsR0FBRyxDQUFDLENBQUM7WUFFTixPQUFPLENBQUMsR0FBRyxRQUFRLEVBQUU7Z0JBQ25CLE1BQU0sQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUM7YUFDM0I7U0FDRjtRQUVELE1BQU0sQ0FBQyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQztRQUVuQixPQUFPLENBQUMsR0FBRyxJQUFJLENBQUMsSUFBSSxHQUFHLENBQUMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUM3QixNQUFNLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUE7U0FDNUI7UUFFRCxJQUFJLENBQUMsR0FBRyxHQUFHLE1BQU0sQ0FBQztRQUNsQixJQUFJLENBQUMsSUFBSSxFQUFFLENBQUM7SUFDZCxDQUFDO0lBRU0sTUFBTSxDQUFDLEtBQWE7UUFDekIsSUFBSSxRQUFRLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxLQUFLLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDO1FBQzFDLElBQUksSUFBSSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsS0FBSyxDQUFDLENBQUM7UUFFM0IsS0FBSyxJQUFJLENBQUMsR0FBRyxRQUFRLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQyxJQUFJLEdBQUcsQ0FBQyxFQUFFLENBQUMsRUFBRSxFQUFFO1lBQzdDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUM7U0FDL0I7UUFDRCxJQUFJLENBQUMsSUFBSSxFQUFFLENBQUM7UUFFWixPQUFPLElBQUksQ0FBQztJQUNkLENBQUM7SUFFTSxRQUFRO1FBQ2IsT0FBTyxJQUFJLENBQUMsR0FBRyxDQUFDLEtBQUssQ0FBQyxDQUFDLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQztJQUNoRCxDQUFDO0NBQ0Y7QUEzREQsa0NBMkRDIiwic291cmNlc0NvbnRlbnQiOlsiXG5leHBvcnQgY2xhc3MgVmVjdG9yQXJyYXk8VD4ge1xuICBwcml2YXRlIGFycjogVFtdO1xuICBwcml2YXRlIHZlY3RvcjogbnVtYmVyO1xuICBwdWJsaWMgc2l6ZTogbnVtYmVyO1xuXG4gIHB1YmxpYyBjb25zdHJ1Y3Rvcih2ZWN0b3I6IG51bWJlciA9IDEwKSB7XG4gICAgdGhpcy52ZWN0b3IgPSB2ZWN0b3I7XG4gICAgdGhpcy5zaXplID0gMDtcbiAgICB0aGlzLmFyciA9IG5ldyBBcnJheTxUPih0aGlzLnNpemUpO1xuICB9XG5cbiAgcHVibGljIGdldCBpc0VtcHR5KCkge1xuICAgIHJldHVybiB0aGlzLnNpemUgPT09IDA7XG4gIH1cblxuICBwdWJsaWMgZnJvbShhcnI6IFRbXSkge1xuICAgIHRoaXMuYXJyID0gYXJyO1xuICAgIHRoaXMuc2l6ZSA9IGFyci5sZW5ndGg7XG4gIH1cblxuICBwdWJsaWMgYWRkKGl0ZW06IFQsIGluZGV4ID0gdGhpcy5zaXplKTogdm9pZCB7XG4gICAgbGV0IHBvc2l0aW9uID0gTWF0aC5taW4oaW5kZXgsIHRoaXMuc2l6ZSk7XG4gICAgbGV0IHRhcmdldCA9IHRoaXMuYXJyO1xuICAgIGxldCBpID0gcG9zaXRpb247XG5cbiAgICBpZiAodGhpcy5zaXplID09PSB0aGlzLmFyci5sZW5ndGgpIHtcbiAgICAgIHRhcmdldCA9IG5ldyBBcnJheTxUPih0aGlzLnNpemUgKyB0aGlzLnZlY3Rvcik7XG4gICAgICBpID0gMDtcblxuICAgICAgd2hpbGUgKGkgPCBwb3NpdGlvbikge1xuICAgICAgICB0YXJnZXRbaV0gPSB0aGlzLmFycltpKytdO1xuICAgICAgfVxuICAgIH1cblxuICAgIHRhcmdldFtpKytdID0gaXRlbTtcblxuICAgIGZvciAoOyBpIDwgdGhpcy5zaXplICsgMTsgaSsrKSB7XG4gICAgICB0YXJnZXRbaV0gPSB0aGlzLmFycltpIC0gMV1cbiAgICB9XG5cbiAgICB0aGlzLmFyciA9IHRhcmdldDtcbiAgICB0aGlzLnNpemUrKztcbiAgfVxuXG4gIHB1YmxpYyByZW1vdmUoaW5kZXg6IG51bWJlcik6IFQge1xuICAgIGxldCBwb3NpdGlvbiA9IE1hdGgubWluKGluZGV4LCB0aGlzLnNpemUpO1xuICAgIGxldCBpdGVtID0gdGhpcy5hcnJbaW5kZXhdO1xuXG4gICAgZm9yIChsZXQgaSA9IHBvc2l0aW9uOyBpIDwgdGhpcy5zaXplIC0gMTsgaSsrKSB7XG4gICAgICB0aGlzLmFycltpXSA9IHRoaXMuYXJyW2kgKyAxXTtcbiAgICB9XG4gICAgdGhpcy5zaXplLS07XG5cbiAgICByZXR1cm4gaXRlbTtcbiAgfVxuXG4gIHB1YmxpYyB0b1N0cmluZygpIHtcbiAgICByZXR1cm4gdGhpcy5hcnIuc2xpY2UoMCwgdGhpcy5zaXplKS5qb2luKFwiLFwiKTtcbiAgfVxufVxuIl19
+
+module.exports = VectorArray;

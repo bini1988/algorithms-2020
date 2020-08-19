@@ -1,19 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const NativeArray_1 = require("../NativeArray");
-function test([line]) {
-    const SIZE = parseInt(line, 10);
-    const arr = new NativeArray_1.NativeArray();
-    const source = new Array(SIZE);
-    for (let i = 0; i < SIZE; i++) {
-        source[i] = i;
-    }
-    arr.from(source);
-    for (let i = 0; i < SIZE; i++) {
-        arr.remove(0);
-    }
-    return null;
-}
-test.title = "NativeArray";
-module.exports = test;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvYmxlbS0wMS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInByb2JsZW0tMDEudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxnREFBNkM7QUFFN0MsU0FBUyxJQUFJLENBQUMsQ0FBQyxJQUFJLENBQVc7SUFDNUIsTUFBTSxJQUFJLEdBQUcsUUFBUSxDQUFDLElBQUksRUFBRSxFQUFFLENBQUMsQ0FBQztJQUNoQyxNQUFNLEdBQUcsR0FBRyxJQUFJLHlCQUFXLEVBQVUsQ0FBQztJQUN0QyxNQUFNLE1BQU0sR0FBRyxJQUFJLEtBQUssQ0FBQyxJQUFJLENBQUMsQ0FBQztJQUUvQixLQUFJLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLEdBQUcsSUFBSSxFQUFFLENBQUMsRUFBRSxFQUFFO1FBQzVCLE1BQU0sQ0FBQyxDQUFDLENBQUMsR0FBRyxDQUFDLENBQUM7S0FDZjtJQUNELEdBQUcsQ0FBQyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUM7SUFFakIsS0FBSSxJQUFJLENBQUMsR0FBRyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksRUFBRSxDQUFDLEVBQUUsRUFBRTtRQUM1QixHQUFHLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxDQUFDO0tBQ2Y7SUFDRCxPQUFPLElBQUksQ0FBQztBQUNkLENBQUM7QUFFRCxJQUFJLENBQUMsS0FBSyxHQUFHLGFBQWEsQ0FBQztBQUUzQixNQUFNLENBQUMsT0FBTyxHQUFHLElBQUksQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5hdGl2ZUFycmF5IH0gZnJvbSBcIi4uL05hdGl2ZUFycmF5XCI7XG5cbmZ1bmN0aW9uIHRlc3QoW2xpbmVdOiBzdHJpbmdbXSkge1xuICBjb25zdCBTSVpFID0gcGFyc2VJbnQobGluZSwgMTApO1xuICBjb25zdCBhcnIgPSBuZXcgTmF0aXZlQXJyYXk8bnVtYmVyPigpO1xuICBjb25zdCBzb3VyY2UgPSBuZXcgQXJyYXkoU0laRSk7XG5cbiAgZm9yKGxldCBpID0gMDsgaSA8IFNJWkU7IGkrKykge1xuICAgIHNvdXJjZVtpXSA9IGk7XG4gIH1cbiAgYXJyLmZyb20oc291cmNlKTtcblxuICBmb3IobGV0IGkgPSAwOyBpIDwgU0laRTsgaSsrKSB7XG4gICAgYXJyLnJlbW92ZSgwKTtcbiAgfVxuICByZXR1cm4gbnVsbDtcbn1cblxudGVzdC50aXRsZSA9IFwiTmF0aXZlQXJyYXlcIjtcblxubW9kdWxlLmV4cG9ydHMgPSB0ZXN0O1xuIl19
+const createProblem = require("./create-problem");
+
+module.exports = createProblem(require("../NativeArray"), "NativeArray");

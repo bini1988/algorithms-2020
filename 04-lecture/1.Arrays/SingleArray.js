@@ -1,49 +1,85 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SingleArray = void 0;
+
 class SingleArray {
-    constructor() {
-        this.arr = new Array(0);
+  constructor() {
+    /**
+     * @type {Array<any>}
+     */
+    this.arr = new Array(0);
+  }
+
+  /**
+   * Размер массива
+   */
+  get size() {
+    return this.arr.length;
+  }
+
+  /**
+   * Является ли массив пустым
+   */
+  get isEmpty() {
+    return this.size === 0;
+  }
+
+  /**
+   * Инициализировать коллекцию исходным массивом
+   * @param {Array<any>} arr
+   */
+  from(arr) {
+    this.arr = arr;
+  }
+
+  /**
+   * Добавляет элемент по заданному индексу
+   * @param {any} item Добавляемый элемент
+   * @param {number} index Индекс вставки элемента
+   */
+  add(item, index = this.size) {
+    const pos = Math.min(index, this.size);
+    const src = new Array(this.size + 1);
+
+    for (let i = 0; i < this.size; i++) {
+      src[i] = this.arr[i];
     }
-    get size() {
-        return this.arr.length;
+    for (let i = this.size; i > pos; i--) {
+      src[i] = this.arr[i - 1];
     }
-    get isEmpty() {
-        return this.size === 0;
+    src[pos] = item;
+
+    this.arr = src;
+  }
+
+  /**
+   * Удаляет элемент по заданному индексу
+   * @param {number} index Индекс удаляемого элемента
+   */
+  remove(index = -1) {
+    const pos = (index === -1)
+      ? this.size - 1 : Math.min(index, this.size);
+
+    const src = new Array(this.size - 1);
+    const item = this.arr[pos];
+
+    for (let i = 0; i < src.length; i++) {
+      src[i] = this.arr[i + Number(i >= pos)];
     }
-    from(arr) {
-        this.arr = arr;
+
+    this.arr = src;
+    return item;
+  }
+
+  /**
+   * Возваращает копию массива элементов
+   * @returns {any[]}
+   */
+  toArray() {
+    const out = new Array(this.size);
+
+    for (let i = 0; i < this.size; i++) {
+      out[i] = this.arr[i];
     }
-    add(item, index = this.size) {
-        let position = Math.min(index, this.size);
-        let target = new Array(this.size + 1);
-        let i = 0;
-        while (i < position) {
-            target[i] = this.arr[i++];
-        }
-        target[i++] = item;
-        for (; i < this.size + 1; i++) {
-            target[i] = this.arr[i - 1];
-        }
-        this.arr = target;
-    }
-    remove(index) {
-        let position = Math.min(index, this.size);
-        let target = new Array(this.size - 1);
-        let item = this.arr[index];
-        let i = 0;
-        for (; i < position; i++) {
-            target[i] = this.arr[i];
-        }
-        for (; i < this.size - 1; i++) {
-            target[i] = this.arr[i + 1];
-        }
-        this.arr = target;
-        return item;
-    }
-    toString() {
-        return this.arr.slice(0, this.size).join(",");
-    }
+    return out;
+  }
 }
-exports.SingleArray = SingleArray;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiU2luZ2xlQXJyYXkuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJTaW5nbGVBcnJheS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFDQSxNQUFhLFdBQVc7SUFBeEI7UUFDVSxRQUFHLEdBQVEsSUFBSSxLQUFLLENBQUksQ0FBQyxDQUFDLENBQUM7SUFtRHJDLENBQUM7SUFqREMsSUFBVyxJQUFJO1FBQ2IsT0FBTyxJQUFJLENBQUMsR0FBRyxDQUFDLE1BQU0sQ0FBQztJQUN6QixDQUFDO0lBRUQsSUFBVyxPQUFPO1FBQ2hCLE9BQU8sSUFBSSxDQUFDLElBQUksS0FBSyxDQUFDLENBQUM7SUFDekIsQ0FBQztJQUVNLElBQUksQ0FBQyxHQUFRO1FBQ2xCLElBQUksQ0FBQyxHQUFHLEdBQUcsR0FBRyxDQUFDO0lBQ2pCLENBQUM7SUFFTSxHQUFHLENBQUMsSUFBTyxFQUFFLEtBQUssR0FBRyxJQUFJLENBQUMsSUFBSTtRQUNuQyxJQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsR0FBRyxDQUFDLEtBQUssRUFBRSxJQUFJLENBQUMsSUFBSSxDQUFDLENBQUM7UUFDMUMsSUFBSSxNQUFNLEdBQUcsSUFBSSxLQUFLLENBQUksSUFBSSxDQUFDLElBQUksR0FBRyxDQUFDLENBQUMsQ0FBQztRQUN6QyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7UUFFVixPQUFPLENBQUMsR0FBRyxRQUFRLEVBQUU7WUFDbkIsTUFBTSxDQUFDLENBQUMsQ0FBQyxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQztTQUMzQjtRQUVELE1BQU0sQ0FBQyxDQUFDLEVBQUUsQ0FBQyxHQUFHLElBQUksQ0FBQztRQUVuQixPQUFPLENBQUMsR0FBRyxJQUFJLENBQUMsSUFBSSxHQUFHLENBQUMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUM3QixNQUFNLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUE7U0FDNUI7UUFDRCxJQUFJLENBQUMsR0FBRyxHQUFHLE1BQU0sQ0FBQztJQUNwQixDQUFDO0lBRU0sTUFBTSxDQUFDLEtBQWE7UUFDekIsSUFBSSxRQUFRLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxLQUFLLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDO1FBQzFDLElBQUksTUFBTSxHQUFHLElBQUksS0FBSyxDQUFJLElBQUksQ0FBQyxJQUFJLEdBQUcsQ0FBQyxDQUFDLENBQUM7UUFDekMsSUFBSSxJQUFJLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxLQUFLLENBQUMsQ0FBQztRQUMzQixJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7UUFFVixPQUFPLENBQUMsR0FBRyxRQUFRLEVBQUUsQ0FBQyxFQUFFLEVBQUU7WUFDeEIsTUFBTSxDQUFDLENBQUMsQ0FBQyxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUM7U0FDekI7UUFDRCxPQUFPLENBQUMsR0FBRyxJQUFJLENBQUMsSUFBSSxHQUFHLENBQUMsRUFBRSxDQUFDLEVBQUUsRUFBRTtZQUM3QixNQUFNLENBQUMsQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUM7U0FDN0I7UUFDRCxJQUFJLENBQUMsR0FBRyxHQUFHLE1BQU0sQ0FBQztRQUVsQixPQUFPLElBQUksQ0FBQztJQUNkLENBQUM7SUFFTSxRQUFRO1FBQ2IsT0FBTyxJQUFJLENBQUMsR0FBRyxDQUFDLEtBQUssQ0FBQyxDQUFDLEVBQUUsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQztJQUNoRCxDQUFDO0NBQ0Y7QUFwREQsa0NBb0RDIiwic291cmNlc0NvbnRlbnQiOlsiXG5leHBvcnQgY2xhc3MgU2luZ2xlQXJyYXk8VD4ge1xuICBwcml2YXRlIGFycjogVFtdID0gbmV3IEFycmF5PFQ+KDApO1xuXG4gIHB1YmxpYyBnZXQgc2l6ZSgpIHtcbiAgICByZXR1cm4gdGhpcy5hcnIubGVuZ3RoO1xuICB9XG5cbiAgcHVibGljIGdldCBpc0VtcHR5KCkge1xuICAgIHJldHVybiB0aGlzLnNpemUgPT09IDA7XG4gIH1cblxuICBwdWJsaWMgZnJvbShhcnI6IFRbXSkge1xuICAgIHRoaXMuYXJyID0gYXJyO1xuICB9XG5cbiAgcHVibGljIGFkZChpdGVtOiBULCBpbmRleCA9IHRoaXMuc2l6ZSk6IHZvaWQge1xuICAgIGxldCBwb3NpdGlvbiA9IE1hdGgubWluKGluZGV4LCB0aGlzLnNpemUpO1xuICAgIGxldCB0YXJnZXQgPSBuZXcgQXJyYXk8VD4odGhpcy5zaXplICsgMSk7XG4gICAgbGV0IGkgPSAwO1xuXG4gICAgd2hpbGUgKGkgPCBwb3NpdGlvbikge1xuICAgICAgdGFyZ2V0W2ldID0gdGhpcy5hcnJbaSsrXTtcbiAgICB9XG5cbiAgICB0YXJnZXRbaSsrXSA9IGl0ZW07XG5cbiAgICBmb3IgKDsgaSA8IHRoaXMuc2l6ZSArIDE7IGkrKykge1xuICAgICAgdGFyZ2V0W2ldID0gdGhpcy5hcnJbaSAtIDFdXG4gICAgfVxuICAgIHRoaXMuYXJyID0gdGFyZ2V0O1xuICB9XG5cbiAgcHVibGljIHJlbW92ZShpbmRleDogbnVtYmVyKTogVCB7XG4gICAgbGV0IHBvc2l0aW9uID0gTWF0aC5taW4oaW5kZXgsIHRoaXMuc2l6ZSk7XG4gICAgbGV0IHRhcmdldCA9IG5ldyBBcnJheTxUPih0aGlzLnNpemUgLSAxKTtcbiAgICBsZXQgaXRlbSA9IHRoaXMuYXJyW2luZGV4XTtcbiAgICBsZXQgaSA9IDA7XG5cbiAgICBmb3IgKDsgaSA8IHBvc2l0aW9uOyBpKyspIHtcbiAgICAgIHRhcmdldFtpXSA9IHRoaXMuYXJyW2ldO1xuICAgIH1cbiAgICBmb3IgKDsgaSA8IHRoaXMuc2l6ZSAtIDE7IGkrKykge1xuICAgICAgdGFyZ2V0W2ldID0gdGhpcy5hcnJbaSArIDFdO1xuICAgIH1cbiAgICB0aGlzLmFyciA9IHRhcmdldDtcblxuICAgIHJldHVybiBpdGVtO1xuICB9XG5cbiAgcHVibGljIHRvU3RyaW5nKCkge1xuICAgIHJldHVybiB0aGlzLmFyci5zbGljZSgwLCB0aGlzLnNpemUpLmpvaW4oXCIsXCIpO1xuICB9XG59XG4iXX0=
+
+module.exports = SingleArray;

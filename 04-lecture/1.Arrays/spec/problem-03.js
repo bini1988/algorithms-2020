@@ -1,8 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const VectorArray_1 = require("../VectorArray");
-const create_test_1 = require("./create-test");
-const test = create_test_1.createTest(VectorArray_1.VectorArray);
-test.title = "VectorArray";
-module.exports = test;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvYmxlbS0wMy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInByb2JsZW0tMDMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxnREFBNkM7QUFDN0MsK0NBQTJDO0FBRTNDLE1BQU0sSUFBSSxHQUFHLHdCQUFVLENBQUMseUJBQVcsQ0FBQyxDQUFDO0FBQ3JDLElBQUksQ0FBQyxLQUFLLEdBQUcsYUFBYSxDQUFDO0FBRTNCLE1BQU0sQ0FBQyxPQUFPLEdBQUcsSUFBSSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgVmVjdG9yQXJyYXkgfSBmcm9tIFwiLi4vVmVjdG9yQXJyYXlcIjtcbmltcG9ydCB7IGNyZWF0ZVRlc3QgfSBmcm9tIFwiLi9jcmVhdGUtdGVzdFwiO1xuXG5jb25zdCB0ZXN0ID0gY3JlYXRlVGVzdChWZWN0b3JBcnJheSk7XG50ZXN0LnRpdGxlID0gXCJWZWN0b3JBcnJheVwiO1xuXG5tb2R1bGUuZXhwb3J0cyA9IHRlc3Q7XG4iXX0=
