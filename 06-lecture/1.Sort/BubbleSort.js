@@ -1,6 +1,6 @@
 
 /**
- * Функция сравненния
+ * Функция сравнения
  * @param {Any} a
  * @param {Any} b
  * @returns {number} Вернет значение меньше 0 если a < b, больше 0 если a > b, равное 0 если a == b
@@ -24,11 +24,13 @@ function swap(arr, indexA, indexB) {
 /**
  * Отсортировать элементы массива
  * @param {Array<any>} arr Массива элементов
- * @param {Function} cmp Функция сравненния элементов массива
+ * @param {Function} cmp Функция сравнения элементов массива
  */
 function sort(arr, cmp = compare) {
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 1; j < arr.length - i; j++) {
+  const N = arr.length;
+
+  for (let i = 0; i < N; i++) {
+    for (let j = 1; j < N - i; j++) {
       if (cmp(arr[j - 1], arr[j]) > 0) {
         swap(arr, j - 1, j);
       }
