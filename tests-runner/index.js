@@ -5,7 +5,7 @@ const { stat, readdir } = require("fs").promises;
 const Table = require("cli-table");
 
 const PROBLEM_RUNNER_PATH = path.resolve(__dirname, "./problem-runner.js");
-const PROBLEM_RUNNER_TIMEOUT = 2000; // ms
+const PROBLEM_RUNNER_TIMEOUT = 40000; // ms
 
 function print(str = "", maxLength = 15) {
   const endIndex = Math.trunc((maxLength - 3));
@@ -15,7 +15,9 @@ function print(str = "", maxLength = 15) {
 
 function printTime([seconds, nanoseconds] = []) {
   if (isFinite(seconds) && isFinite(nanoseconds)) {
-    const msseconds = seconds * 10e3 + nanoseconds * 1e-6;
+    const NS_PER_SEC = 1e9;
+    const msseconds = (seconds * NS_PER_SEC + nanoseconds) * 1e-6;
+
     return `${msseconds.toFixed(seconds > 0 ? 2 : 4)}ms`;
   }
   return `∞ ms`;
@@ -108,14 +110,15 @@ function countdownOf(totalCount) {
 
 /**
  * Запуск теста для переданной задачи
+ * @param {number} index
  * @param {string} problemPath
  * @param {[string, string]} paths
  * @param {number} ms
  */
-async function runProblem(problemPath, [inputPath, outputPath], ms) {
+async function runProblem(index, problemPath, [inputPath, outputPath], ms) {
   return new Promise((resolve, reject) => {
     let timeout = null;
-    let processFork = fork(PROBLEM_RUNNER_PATH, [problemPath, inputPath, outputPath]);
+    let processFork = fork(PROBLEM_RUNNER_PATH, [index, problemPath, inputPath, outputPath]);
 
     processFork.on("error", reject);
     processFork.on("message", message => {
@@ -146,7 +149,7 @@ async function run(index, problems, paths = [], timeout) {
 
     for (const { problemPath } of problems) {
       try {
-        task.problems.push(await runProblem(problemPath, paths, timeout));
+        task.problems.push(await runProblem(index, problemPath, paths, timeout));
       } catch (error) {
         task.problems.push({ error });
       }
