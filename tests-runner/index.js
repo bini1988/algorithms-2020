@@ -5,7 +5,7 @@ const { stat, readdir } = require("fs").promises;
 const Table = require("cli-table");
 
 const PROBLEM_RUNNER_PATH = path.resolve(__dirname, "./problem-runner.js");
-const PROBLEM_RUNNER_TIMEOUT = 2000; // ms
+const PROBLEM_RUNNER_TIMEOUT = 30_000; // ms
 
 function print(str = "", maxLength = 15) {
   const endIndex = Math.trunc((maxLength - 3));
@@ -15,18 +15,23 @@ function print(str = "", maxLength = 15) {
 
 function printTime([seconds, nanoseconds] = []) {
   if (isFinite(seconds) && isFinite(nanoseconds)) {
-    const msseconds = seconds * 10e3 + nanoseconds * 1e-6;
+    const NS_PER_SEC = 1e9;
+    const msseconds = (seconds * NS_PER_SEC + nanoseconds) * 1e-6;
+
     return `${msseconds.toFixed(seconds > 0 ? 2 : 4)}ms`;
   }
   return `∞ ms`;
 }
 
-function printProblemsHead(problems) {
-  return problems.map(({ problem }, index) => problem.title || `Problem #${index + 1}`);
+function printInfo(message) {
+  process.stdout.clearLine();
+  process.stdout.write("\033[0G[i] ".magenta);
+  process.stdout.write(`${message}`);
 }
 
 function createReportTable(problems) {
-  const head = ["#", "Test", ...printProblemsHead(problems)];
+  const headProblems = problems.map(({ problem }, index) => problem.title || `Problem #${index + 1}`);
+  const head = ["#", "Test", ...headProblems];
   const colWidths = [4, 10, ...problems.map(() => 20)];
 
   return new Table({ head, colWidths });
@@ -88,43 +93,25 @@ async function resolveProblems(problemsPath) {
 }
 
 /**
- * Возвращает счетчик выполняемых тестов
- * @param {number} totalCount Общее количество тестов
- */
-function countdownOf(totalCount) {
-  let runsCount = 0;
-
-  return async function (task) {
-    const message = (runsCount >= totalCount)
-      ? " Tests is finished\n"
-      : ` Tests running done ${runsCount + 1} of ${totalCount}`;
-
-    runsCount++;
-    process.stdout.write("\033[0G[i]".magenta);
-    process.stdout.write(message);
-    return task;
-  };
-}
-
-/**
  * Запуск теста для переданной задачи
- * @param {string} problemPath
- * @param {[string, string]} paths
- * @param {number} ms
+ * @param {number} index Порядковый номер
+ * @param {string} problemPath Путь к переданной задачи
+ * @param {[string, string]} paths Путь к входным/выходным тестовым файлам
+ * @param {number} ms Максимальный таймаут задачи
  */
-async function runProblem(problemPath, [inputPath, outputPath], ms) {
+async function runFork(index, problemPath, [inputPath, outputPath], ms) {
   return new Promise((resolve, reject) => {
     let timeout = null;
-    let processFork = fork(PROBLEM_RUNNER_PATH, [problemPath, inputPath, outputPath]);
+    let childFork = fork(PROBLEM_RUNNER_PATH, [index, problemPath, inputPath, outputPath]);
 
-    processFork.on("error", reject);
-    processFork.on("message", message => {
+    childFork.on("error", reject);
+    childFork.on("message", message => {
       clearTimeout(timeout);
       resolve(message);
     });
 
     timeout = setTimeout(() => {
-      if (processFork.kill("SIGKILL")) {
+      if (childFork.kill("SIGKILL")) {
         resolve({
           hrtime: [Infinity, Infinity], actual: null, expect: null, test: null,
         });
@@ -142,13 +129,13 @@ async function runProblem(problemPath, [inputPath, outputPath], ms) {
  */
 async function run(index, problems, paths = [], timeout) {
   try {
-    const task = { index, problems: [], paths };
+    const task = { index, runs: [], paths };
 
     for (const { problemPath } of problems) {
       try {
-        task.problems.push(await runProblem(problemPath, paths, timeout));
+        task.runs.push(await runFork(index, problemPath, paths, timeout));
       } catch (error) {
-        task.problems.push({ error });
+        task.runs.push({ error });
       }
     }
     return task;
@@ -164,21 +151,21 @@ async function run(index, problems, paths = [], timeout) {
 
     const problems = await resolveProblems(PROBLEM_FULL_PATH);
     const tests = await resolveTests(PROBLEM_FULL_PATH);
-    const countdown = countdownOf(tests.length);
-    const runs = [];
     const PROBLEM_TIMEOUT = (OPTION_KEY === "-t")
       ? parseInt(OPTION_VALUE, 10) || PROBLEM_RUNNER_TIMEOUT
       : PROBLEM_RUNNER_TIMEOUT;
+    const tasks = [];
 
     for (let index = 0; index < tests.length; index++) {
-      runs.push(run(index, problems, tests[index], PROBLEM_TIMEOUT).then(countdown));
+      tasks.push(await run(index, problems, tests[index], PROBLEM_TIMEOUT));
+
+      printInfo(`Done ${index + 1} of ${tests.length} tests`);
     }
-    const tasks = await Promise.all(runs);
+    printInfo("Tests is finished\n");
+
     const report = createReportTable(problems);
 
-    countdown();
-
-    for (const { index, error, paths, problems } of tasks) {
+    for (const { index, error, paths, runs } of tasks) {
       const [inputPath] = paths;
       const columns = [index, path.basename(inputPath, path.extname(inputPath))];
 
@@ -187,7 +174,7 @@ async function run(index, problems, paths = [], timeout) {
         console.error(error);
         continue;
       }
-      for (const { error, test, expect, actual, hrtime } of problems) {
+      for (const { error, test, expect, actual, hrtime } of runs) {
         if (error) {
           columns.push(`${"[e]".red}\n${print(error)}`);
           console.error(error);
@@ -205,6 +192,7 @@ async function run(index, problems, paths = [], timeout) {
       report.push(columns);
     }
     console.log(report.toString());
+    console.log(`Test timeout is ${PROBLEM_TIMEOUT} ms`.grey);
   } catch (error) {
     console.error("[e]".red, "Tests Runner:", error.message);
     console.error(error);

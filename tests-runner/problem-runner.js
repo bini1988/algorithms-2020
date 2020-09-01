@@ -36,7 +36,7 @@ async function readOutput(filePath) {
  * Запускает задачу с переданными входным и выходным условиями
  */
 (async function runner() {
-  const [_, __, problemPath, inputPath, outputPath] = process.argv;
+  const [_, __, index, problemPath, inputPath, outputPath] = process.argv;
 
   try {
     const input = await readInput(inputPath);
