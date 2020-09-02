@@ -55,8 +55,6 @@ async function readOutput(filePath) {
     process.send({ hrtime, actual, expect, test });
   } catch (error) {
     process.send({ error: error.message });
-  } finally {
-    process.exit(0)
   }
 })();
 

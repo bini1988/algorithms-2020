@@ -104,10 +104,15 @@ async function runFork(index, problemPath, [inputPath, outputPath], ms) {
     let timeout = null;
     let childFork = fork(PROBLEM_RUNNER_PATH, [index, problemPath, inputPath, outputPath]);
 
-    childFork.on("error", reject);
+    childFork.on("error", (error) => {
+      reject(error);
+    });
     childFork.on("message", message => {
       clearTimeout(timeout);
       resolve(message);
+    });
+    childFork.on("exit", () => {
+      childFork.kill("SIGKILL");
     });
 
     timeout = setTimeout(() => {
@@ -197,4 +202,7 @@ async function run(index, problems, paths = [], timeout) {
     console.error("[e]".red, "Tests Runner:", error.message);
     console.error(error);
   }
-}())
+}()).catch(error => {
+  console.error("[e]".red, "Unhandled error:", error.message);
+  console.error(error);
+})
