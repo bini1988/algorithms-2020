@@ -79,7 +79,8 @@ async function resolveProblems(problemsPath) {
     const files = await readdir(problemsPath, { encoding: "utf-8" });
 
     for (let index = 1; index < files.length; index++) {
-      const problemName = `problem-0${index}.js`;
+      const problemIndex = `${index}`.padStart(2, "0");
+      const problemName = `problem-${problemIndex}.js`;
 
       if (!files.includes(problemName)) break;
 
