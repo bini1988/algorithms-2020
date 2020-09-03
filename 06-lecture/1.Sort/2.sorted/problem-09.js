@@ -1,3 +1,3 @@
 const createProblem = require("./create-problem");
 
-module.exports = createProblem(require("../RadixSort"), "RadixSort");
+module.exports = createProblem(require("../MergeSort"), "MergeSort");

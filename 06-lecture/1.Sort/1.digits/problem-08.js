@@ -1,3 +1,3 @@
 const createProblem = require("./create-problem");
 
-module.exports = createProblem(require("../CountingSort"), "CountingSort");
+module.exports = createProblem(require("../QuickSort"), "QuickSort");

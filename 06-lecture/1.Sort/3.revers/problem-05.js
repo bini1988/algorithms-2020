@@ -1,3 +1,8 @@
 const createProblem = require("./create-problem");
+const { termHibbard, sort } = require("../ShellSort");
 
-module.exports = createProblem(require("../HeapSort"), "HeapSort");
+function sortHibbard(arr) {
+  return sort(arr, termHibbard);
+}
+
+module.exports = createProblem(sortHibbard, "ShellSort II");

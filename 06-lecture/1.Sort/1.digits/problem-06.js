@@ -1,3 +1,8 @@
 const createProblem = require("./create-problem");
+const { termSedgewick, sort } = require("../ShellSort");
 
-module.exports = createProblem(require("../QuickSort"), "QuickSort");
+function sortSedgewick(arr) {
+  return sort(arr, termSedgewick);
+}
+
+module.exports = createProblem(sortSedgewick, "ShellSort III");

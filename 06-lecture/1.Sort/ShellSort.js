@@ -74,10 +74,10 @@ function fromTerm(term, N) {
 /**
  * Отсортировать элементы массива
  * @param {Array<any>} arr Массива элементов
- * @param {Function} cmp Функция сравнения элементов массива
  * @param {Function} term Функция расчета интервала между элементами
+ * @param {Function} cmp Функция сравнения элементов массива
  */
-function sort(arr, cmp = compare, term = termShell) {
+function sort(arr, term = termShell, cmp = compare) {
   const N = arr.length;
   const s = fromTerm(term, N);
 
@@ -92,4 +92,4 @@ function sort(arr, cmp = compare, term = termShell) {
   return arr;
 }
 
-module.exports = sort;
+module.exports = { termShell, termHibbard, termSedgewick, sort };
