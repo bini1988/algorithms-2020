@@ -1,105 +1,75 @@
 const Stack = require("./Stack");
+const Queue = require("./Queue");
 
 /**
- * Рекурсивный поиск в глубину
- * @param {Array<Array<number>>} graph Граф заданный вектором смежности
- * @param {number} vertex Искомая вершина
- * @param {number} [from] Вершина с которой начинается поиск
- * @returns {[boolean, Array<number>]} True если вершина найдена, путь к найденной вершине
+ * Рекурсивный обход в глубину
+ * @param {Array<Array<number>>} G Граф заданный вектором смежности
+ * @param {number} vertex Вершина с которой начинается обход
+ * @param {Array<number>} [used] Состояние посещенных вершин
+ * @param {Array<number>} [path] Порядок обхода вершин
+ * @returns {void}
  */
-function dfs_r(graph, vertex, from = 0) {
-  const used = Array(graph.length);
-  const path = [];
+function dfs_r(G, vertex, used = [], path = []) {
+  used[vertex] = true;
+  path.push(vertex);
 
-  /**
-   * @param {number} v
-   * @returns {boolean}
-   */
-  function find(v) {
-    used[v] = true;
-    path.push(v);
-
-    if (v === vertex) {
-      return true;
-    }
-    for (const u of graph[v]) {
-      if (!used[u] && find(u)) {
-        return true;
-      }
-    }
-    path.pop();
-
-    return false;
+  for (const u of G[vertex]) {
+    if (!used[u]) dfs_r(G, u, used, path);
   }
-  return [find(from), path];
 }
 
-
 /**
- * Поиск в глубину
- * @param {Array<Array<number>>} graph Граф заданный вектором смежности
- * @param {number} vertex Искомая вершина
- * @param {number} [from] Вершина с которой начинается поиск
- * @returns {[boolean, Array<number>]} True если вершина найдена, путь к найденной вершине
+ * Обход в глубину
+ * @param {Array<Array<number>>} G Граф заданный вектором смежности
+ * @param {number} vertex Вершина с которой начинается обход
+ * @param {Array<number>} [used] Состояние посещенных вершин
+ * @param {Array<number>} [path] Порядок обхода вершин
+ * @returns {void}
  */
-function dfs(graph, vertex, from = 0) {
-  const used = Array(graph.length);
+function dfs(G, vertex, used = [], path = []) {
   const stack = new Stack();
-  const path = [];
 
-  stack.push(from);
+  stack.push(vertex);
 
   while (stack.size > 0) {
     const v = stack.pop();
 
-    if (v === vertex) {
-      return [true, path];
-    } else if (!used[v]) {
-      used[v] = true;
+    if (used[v]) continue;
 
-      for (let i = graph[v].length; i; i--) {
-        const u = graph[v][i - 1];
-
-        if (!used[u]) stack.push(u);
-      }
-    }
-  }
-  return [false, path];
-}
-
-/**
- * Поиск в ширину
- * @param {Array<Array<number>>} graph Граф заданный вектором смежности
- * @param {number} vertex Искомая вершина
- * @param {number} [from] Вершина с которой начинается поиск
- * @returns {[boolean, Array<number>]} True если вершина найдена, путь к найденной вершине
- */
-function bfs(graph, vertex, from = 0) {
-  const N = graph.length;
-  const used = Array(N);
-  const path = [];
-
-  /**
-   * @param {number} v
-   * @returns {boolean}
-   */
-  function find(v) {
     used[v] = true;
     path.push(v);
 
-    if (v === vertex) {
-      return true;
+    for (let u = G[v].length; u; u--) {
+      if (!used[G[v][u - 1]]) stack.push(G[v][u - 1]);
     }
-    for (const u of graph[v]) {
-      if (!used[u] && find(u)) {
-        return true;
-      }
-    }
-    path.pop();
-
-    return false;
   }
-  return [find(from), path];
+}
+
+/**
+ * Обход в ширину
+ * @param {Array<Array<number>>} G Граф заданный вектором смежности
+ * @param {number} vertex Вершина с которой начинается обход
+ * @param {Array<number>} [used] Состояние посещенных вершин
+ * @param {Array<number>} [path] Порядок обхода вершин
+ * @returns {void}
+ */
+function bfs(G, vertex, used = [], path = []) {
+  const queue = new Queue();
+
+  queue.enqueue(vertex);
+
+  while (queue.size > 0) {
+    const v = queue.dequeue();
+
+    if (used[v]) continue;
+
+    used[v] = true;
+    path.push(v);
+
+    for (let u = G[v].length; u; u--) {
+      if (!used[G[v][u - 1]]) queue.enqueue(G[v][u - 1]);
+    }
+  }
 }
 
 module.exports = { dfs_r, dfs, bfs };
