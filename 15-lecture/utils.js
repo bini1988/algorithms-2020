@@ -29,7 +29,6 @@ function list(G) {
       }
     }
   }
-  out.sort((e1, e2) => e1[2] - e2[2]);
 
   return out;
 }
