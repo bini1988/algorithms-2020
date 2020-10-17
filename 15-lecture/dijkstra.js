@@ -1,22 +1,4 @@
-
-/**
- * Вернуть списко ребер минимального пути до заданной вершины
- * @param {Array<number>} V Вектор переходов
- * @param {number} v2 До какой вершины ищется кратчайший пути
- * @returns {Array<{v1: number; v2: number}>} Список ребер заданных парой вершин
- */
-function pathTo(V, v2 = 0) {
-  let path = [];
-  let v1 = V[v2];
-
-  while(v1 !== null) {
-    path.push({ v1, v2 });
-    v2 = v1;
-    v1 = V[v2];
-  }
-
-  return path.reverse();
-}
+const { pathTo } = require("./utils");
 
 /**
  * Алгоритм Дейкстры

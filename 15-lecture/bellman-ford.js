@@ -1,23 +1,4 @@
-const { list } = require("./utils");
-
-/**
- * Вернуть списко ребер минимального пути до заданной вершины
- * @param {Array<[number, number]>} D Таблица переходов
- * @param {number} v2 До какой вершины ищется кратчайший пути
- * @returns {Array<{v1: number; v2: number}>} Список ребер заданных парой вершин
- */
-function pathTo(D, v2 = 0) {
-  let path = [];
-  let [w, v1] = D[v2];
-
-  while(v1 !== null) {
-    path.push({ v1, v2 });
-    v2 = v1;
-    [w, v1] = D[v2];
-  }
-
-  return path.reverse();
-}
+const { list, pathTo } = require("./utils");
 
 /**
  * Алгоритм Беллмана — Форда
@@ -29,22 +10,24 @@ function pathTo(D, v2 = 0) {
  */
 function bellmanFord(G, v_s = 0, v_e = 0) {
   const N = G.length;
-  const D = G.map(_ => [Infinity, null]);
+  const D = G.map(_ => Infinity);
+  const V = G.map(_ => null);
   const E = list(G);
 
-  D[v_s] = [0, null];
+  D[v_s] = 0;
 
   for (let i = 0; i < N; i++) {
     for (const [v1, v2, w] of E) {
-      if (D[v1][0] < Infinity) {
-        if (D[v1][0] + w < D[v2][0]) {
-          D[v2] = [D[v1][0] + w, v1];
+      if (D[v1] < Infinity) {
+        if (D[v1] + w < D[v2]) {
+          D[v2] = D[v1] + w;
+          V[v2] = v1;
         }
       }
     }
   }
 
-  return pathTo(D, v_e);
+  return pathTo(V, v_e);
 }
 
 module.exports = { bellmanFord };

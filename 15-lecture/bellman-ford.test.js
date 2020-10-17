@@ -9,7 +9,7 @@ const G = [
 ];
 
 describe("Алгоритм Беллмана — Форда", function () {
-  it("Алгоритм Беллмана — Форда", function () {
+  it("Поиск кратчайшего пути между A и D", function () {
     const E = bellmanFord(G, /* A */ 0, /* D */ 3);
 
     assert.deepStrictEqual(E, [
@@ -18,13 +18,13 @@ describe("Алгоритм Беллмана — Форда", function () {
       { v1: 2, v2: 3},
     ]);
   });
-  it("Алгоритм Беллмана — Форда", function () {
+  it("Поиск кратчайшего пути между C и A", function () {
     const E = bellmanFord(G, /* C */ 2, /* A */ 0);
 
     // TODO: Не работает, возможно важен порядок обхода ребер
     assert.deepStrictEqual(E, [
-      { v1: 2, v2: 1},
-      { v1: 1, v2: 0},
+      { v1: 2, v2: 3},
+      { v1: 3, v2: 0},
     ]);
   });
 });
