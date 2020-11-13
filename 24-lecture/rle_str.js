@@ -1,5 +1,12 @@
 
 /**
+ * Переданное значение находится в заданном диапазоне
+ */
+function at(value, min, max) {
+  return value > min && value < max;
+}
+
+/**
  * Кодирует переданную строку алгоритмом сжатия данных RLE (run-lenght encoding)
  * @param {Buffer} str Кодируемая строка
  * @returns {Buffer}
@@ -11,18 +18,14 @@ function rle_encode(buf) {
   let c = 0, c_i = 0;
 
   while (i < N) {
-    for (c = 1; i + 1 < N && c < 127; i++, c++) {
+    for (c = 1; i + 1 < N && at(c, 0, 127); i++, c++) {
       if (buf[i] !== buf[i + 1]) break;
     }
-
-    if (c > 1) {
-      c_i = j;
-      out[j++] = c;
-    } else if (out[c_i] > -128 && out[c_i] < 0) {
+    if (c === 1 && at(out[c_i], -128, 0)) {
       out[c_i] -= 1;
     } else {
       c_i = j;
-      out[j++] = -1;
+      out[j++] = c === 1 ? -1 : c;
     }
     out[j++] = buf[i++];
   }
